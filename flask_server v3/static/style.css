@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6;
+    margin: 0;
+    padding: 20px;
+}
+h1, h2 {
+    color: #0f1f3d;
+}
+.menu a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: #0055cc;
+    font-weight: bold;
+}
+.hero {
+    text-align: center;
+    margin-top: 30px;
+}
+.full-banner {
+    width: 100%;
+    height: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+}
+table, th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.notification {
+    background: #fff3cd;
+    padding: 10px;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    margin-bottom: 15px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.bell {
+    font-size: 24px;
+    cursor: pointer;
+}
