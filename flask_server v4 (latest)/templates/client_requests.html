@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Requests</title>
+</head>
+<body>
+    <h2>📩 Client Requests</h2>
+    <p>This section shows service requests, customer queries, and response status.</p>
+
+    <h5>Hyperlinks:</h5>
+{% if 'ViewServiceRequests' in subroles %}
+    <a href="{{ url_for('abc') }}">View Service Requests-></a><br>
+{% endif %}
+{% if 'ViewCustomerQueries' in subroles %}
+    <a href="{{ url_for('xyz') }}">View Customer Queries-></a><br>
+{% endif %}
+<a href="{{ url_for('dashboard') }}"> <-Back to Dashboard</a>
+</body>
+</html>

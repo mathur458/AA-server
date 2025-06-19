@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #002f6c;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            font-size: 1.8rem;
+            position: relative;
+        }
+
+        .header-left {
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logout {
+            color: white;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+
+        .bell-icon {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        #notificationDropdown {
+            display: none;
+            background: #7b71ae;
+            border: 1px solid #0a0707;
+            padding: 10px;
+            width: 300px;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            z-index: 999;
+        }
+
+        nav {
+            background-color: #0078d7;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 10px;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 5px;
+            background-color: #005bb5;
+        }
+
+        nav a:hover {
+            background-color: #003e8a;
+        }
+
+        .hero {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .hero img.full-banner {
+            width: 100%;
+            height: calc(100vh - 150px); /* Full screen minus header + nav */
+            object-fit: contain;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            Dashboard - Welcome, {{ session['username'] }}
+        </div>
+        <div class="header-right">
+            <a class="logout" href="{{ url_for('logout') }}">Logout</a>
+            <button class="bell-icon" onclick="toggleNotifications()">🔔</button>
+        </div>
+        <div id="notificationDropdown">
+            <strong>Notifications</strong>
+            <ul>
+                {% if notification %}
+                    <li>{{ notification }}</li>
+                {% endif %}
+                {% for note in notifications %}
+                    <li>{{ note.message }} <small>({{ note.timestamp.strftime('%d %b %Y %H:%M') }})</small></li>
+                {% else %}
+                    <li>No new notifications.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </header>
+
+    <nav>
+        {% if 'Customer Data Usage' in roles %}
+            <a href="{{ url_for('customer_data') }}">📊 Customer Data Usage</a>
+        {% endif %}
+        {% if 'Network Logs' in roles %}
+            <a href="{{ url_for('network_logs') }}">📶 Network Logs</a>
+        {% endif %}
+        {% if 'Client Requests' in roles %}
+            <a href="{{ url_for('client_requests') }}">📩 Client Requests</a>
+        {% endif %}
+    </nav>
+
+    <div class="hero">
+        <a href="https://www.jio.com" target="_blank">
+            <img src="{{ url_for('static', filename='jio_banner.jpg') }}" alt="Jio" class="full-banner">
+        </a>
+    </div>
+
+    <script>
+        function toggleNotifications() {
+            const box = document.getElementById("notificationDropdown");
+            box.style.display = box.style.display === "block" ? "none" : "block";
+        }
+    </script>
+
+</body>
+</html>

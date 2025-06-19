@@ -1,0 +1,5 @@
+Flask
+Flask-SQLAlchemy
+mysql-connector-python
+Werkzeug
+flask-bcrypt
