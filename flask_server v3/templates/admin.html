@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .chart-container {
+            width: 400px;
+            height: 400px;
+            margin: 20px auto;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        input[type="date"] {
+            display: block;
+            margin: 0 auto 20px auto;
+        }
+
+        .section {
+            margin: 40px auto;
+            max-width: 1000px;
+            padding: 20px;
+            background-color: #f7f9fc;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .logout-link {
+            display: block;
+            text-align: center;
+            margin: 40px auto 20px auto;
+            color: red;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+
+        form label {
+            font-weight: bold;
+        }
+
+        form input[type="text"],
+        form input[type="password"],
+        form input[type="email"] {
+            margin: 10px;
+            padding: 5px;
+        }
+
+        form button {
+            margin-top: 10px;
+            padding: 6px 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="section">
+        <h1>Admin Dashboard</h1>
+    </div>
+
+    <div class="section">
+        <h2>Pending User Requests</h2>
+        {% if pending_requests %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Jio Domain ID</th>
+                    <th>Assign Roles</th>
+                    <th>Approve</th>
+                    <th>Reject</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in pending_requests %}
+                <tr>
+                    <td>{{ request.domain }}</td>
+                    <td>
+                        <form class="approve-form" data-id="{{ request.id }}">
+                            {% for role in roles %}
+                                <input type="checkbox" name="roles" value="{{ role }}"> {{ role }}<br>
+                            {% endfor %}
+                        </form>
+                    </td>
+                    <td>
+                        <button onclick="approveRequest('{{ request.id }}')">Approve</button>
+                    </td>
+                    <td>
+                        <button onclick="rejectRequest('{{ request.id }}')">Reject</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align:center;">No pending requests.</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Peak Login Time Tracker</h2>
+        <label for="log-date">Choose Date:</label>
+        <input type="date" id="log-date">
+        <div class="chart-container">
+            <canvas id="loginChart"></canvas>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Active Users</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Roles</th>
+                    <th>Modify</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.password }}</td>
+                    <td>{{ user_roles[user.id]|join(', ') }}</td>
+                    <td><button onclick="toggleModify('{{ user.id }}')">Modify</button></td>
+                    <td><button onclick="deleteUser('{{ user.id }}')">Delete</button></td>
+                </tr>
+                <tr id="modify-box-{{ user.id }}" style="display: none;">
+                    <td colspan="5">
+                        <form id="modify-form-{{ user.id }}">
+                            {% for role in roles %}
+                                <input type="checkbox" name="roles" value="{{ role }}"
+                                {% if role in user_roles[user.id] %}checked{% endif %}> {{ role }}
+                            {% endfor %}
+                            <br>
+                            <button type="button" onclick="updateUser('{{ user.id }}')">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Deleted Users Archive</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Deleted On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for archive in archives %}
+                <tr>
+                    <td>{{ archive.username }}</td>
+                    <td>{{ archive.deletion_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Request Access</title>
+    <style>.error-text {
+    color: red;
+    }
+
+    .success-text {
+        color: green;   
+    }  
+    
+    .para{
+        color: red
+    }
+</style>
+</head>
+<body>
+    <h2>Request Access</h2>
+    <form method="POST">
+        <label>Jio Domain ID:</label>
+        <input type="text" name="domain" required> <br>
+        <label>Password:</label>
+        <input type="password" name="password" required>
+        <br><br>
+        <button type="submit">Submit Request</button>
+    </form>
+
+    <div class="para">
+    <p>Password Requirements:</p>
+    <ul>
+        <li>Must be at least 8 characters</li>
+        <li>Must include 1 uppercase character</li>
+        <li>Must include 1 special character (@,#,&)</li>
+    </ul>
+
+    <p>Domain Requirements:</p>
+    <ul>
+        <li>Must exactly match with your JIO Domain ID</li>
+        <li>Ensure correct placement of '.' (if any)</li>
+        <li>If there is any difference of white space, or other characters, your request will be rejected.</li>
+    </ul>
+    
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="{{ 'error-text' if category == 'error' else 'success-text' }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    Already Registerd? <a href="/login">Login</a>
+</body>
+</html>
